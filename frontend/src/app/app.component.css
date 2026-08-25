@@ -101,7 +101,7 @@
   width: 24px;
   text-align: center;
   flex-shrink: 0;
-  filter: brightness(0) invert(1);
+  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
 }
 
 .nav-label {

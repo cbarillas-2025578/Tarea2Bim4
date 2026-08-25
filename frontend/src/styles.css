@@ -380,6 +380,6 @@ body {
 .opacity-50 { opacity: 0.5; } .opacity-75 { opacity: 0.75; } .opacity-100 { opacity: 1; }
 
 .emoji-white {
-  filter: brightness(0) invert(1);
+  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
   display: inline-block;
 }
