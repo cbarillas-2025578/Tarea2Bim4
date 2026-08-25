@@ -1,0 +1,144 @@
+<div class="dashboard-content">
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h1 class="view-title">Inicio</h1>
+      <p class="view-subtitle">Resumen de tu actividad financiera</p>
+    </div>
+    <div class="header-right">
+      <div class="month-selector">
+        <span class="month-icon">📅</span>
+        <span>{{ currentMonth }}</span>
+      </div>
+      <div class="user-greeting">
+        <span>Hola, <strong>{{ userName }}</strong></span>
+        <div class="avatar">{{ userInitials }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card" *ngFor="let kpi of kpis" [style.border-color]="kpi.color">
+      <div class="kpi-header">
+        <span class="kpi-icon">{{ kpi.icon }}</span>
+        <span class="kpi-title">{{ kpi.title }}</span>
+      </div>
+      <div class="kpi-amount" [style.color]="kpi.color">
+        {{ formatCurrency(kpi.amount) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card chart-card-large">
+      <div class="chart-card-header">
+        <h3>Ingresos vs Gastos</h3>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#00A3FF"></span>Ingresos</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#FF3B5C"></span>Gastos</span>
+        </div>
+      </div>
+      <div class="line-chart-container">
+        <div class="chart-y-axis">
+          <span>8K</span><span>6K</span><span>4K</span><span>2K</span><span>0</span>
+        </div>
+        <div class="chart-area">
+          <svg viewBox="0 0 600 200" class="line-chart-svg" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="gradientIncome" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#00A3FF;stop-opacity:0.3" />
+                <stop offset="100%" style="stop-color:#00A3FF;stop-opacity:0" />
+              </linearGradient>
+              <linearGradient id="gradientExpense" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#FF3B5C;stop-opacity:0.3" />
+                <stop offset="100%" style="stop-color:#FF3B5C;stop-opacity:0" />
+              </linearGradient>
+            </defs>
+            <polygon fill="url(#gradientIncome)" points="0,200 0,120 85,80 170,100 255,50 340,70 425,30 510,60 600,40 600,200" />
+            <polyline fill="none" stroke="#00A3FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="0,120 85,80 170,100 255,50 340,70 425,30 510,60 600,40" />
+            <polygon fill="url(#gradientExpense)" points="0,200 0,150 85,130 170,140 255,110 340,120 425,100 510,90 600,80 600,200" />
+            <polyline fill="none" stroke="#FF3B5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="0,150 85,130 170,140 255,110 340,120 425,100 510,90 600,80" />
+            <circle cx="0" cy="120" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0s" />
+            <circle cx="85" cy="80" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.1s" />
+            <circle cx="170" cy="100" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.2s" />
+            <circle cx="255" cy="50" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.3s" />
+            <circle cx="340" cy="70" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.4s" />
+            <circle cx="425" cy="30" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.5s" />
+            <circle cx="510" cy="60" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.6s" />
+            <circle cx="600" cy="40" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.7s" />
+            <circle cx="0" cy="150" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0s" />
+            <circle cx="85" cy="130" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.1s" />
+            <circle cx="170" cy="140" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.2s" />
+            <circle cx="255" cy="110" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.3s" />
+            <circle cx="340" cy="120" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.4s" />
+            <circle cx="425" cy="100" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.5s" />
+            <circle cx="510" cy="90" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.6s" />
+            <circle cx="600" cy="80" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.7s" />
+          </svg>
+          <div class="chart-x-axis">
+            <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span><span>Jul</span><span>Ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card chart-card-medium">
+      <div class="chart-card-header">
+        <h3>Gastos por Categoría</h3>
+      </div>
+      <div class="donut-container">
+        <svg viewBox="0 0 200 200" class="donut-chart">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#1E2A3A" stroke-width="24" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#00A3FF" stroke-width="24"
+            stroke-dasharray="175 503" stroke-dashoffset="0"
+            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.2s" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#FF3B5C" stroke-width="24"
+            stroke-dasharray="150 503" stroke-dashoffset="-175"
+            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.4s" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#FFC700" stroke-width="24"
+            stroke-dasharray="100 503" stroke-dashoffset="-325"
+            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.6s" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#FF6B00" stroke-width="24"
+            stroke-dasharray="78 503" stroke-dashoffset="-425"
+            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.8s" />
+          <text x="100" y="95" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="700">Q 3,450</text>
+          <text x="100" y="115" text-anchor="middle" fill="#7A8B9E" font-size="11">Total Gastos</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><span class="legend-color" style="background:#00A3FF"></span>Alimentación <strong>35%</strong></div>
+          <div class="donut-legend-item"><span class="legend-color" style="background:#FF3B5C"></span>Transporte <strong>30%</strong></div>
+          <div class="donut-legend-item"><span class="legend-color" style="background:#FFC700"></span>Entretenimiento <strong>20%</strong></div>
+          <div class="donut-legend-item"><span class="legend-color" style="background:#FF6B00"></span>Salud <strong>15%</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card chart-card-medium">
+      <div class="chart-card-header">
+        <h3>Últimos Movimientos</h3>
+      </div>
+      <div class="transactions-table">
+        <div class="transactions-header">
+          <span>Transacción</span>
+          <span>Gastos</span>
+          <span>Balance</span>
+        </div>
+        <div class="transaction-row" *ngFor="let tx of recentTransactions; let i = index"
+          [style.animation-delay]="(i * 0.08) + 's'">
+          <div class="tx-info">
+            <div class="tx-icon" [class.tx-income]="tx.amount > 0" [class.tx-expense]="tx.amount < 0">
+              {{ tx.amount > 0 ? '↑' : '↓' }}
+            </div>
+            <div class="tx-details">
+              <span class="tx-name">{{ tx.name }}</span>
+              <span class="tx-category">{{ tx.category }}</span>
+            </div>
+          </div>
+          <span class="tx-amount" [class.tx-positive]="tx.amount > 0" [class.tx-negative]="tx.amount < 0">
+            {{ formatCurrency(tx.amount) }}
+          </span>
+          <span class="tx-date">{{ tx.date }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

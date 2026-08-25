@@ -1,7 +1,16 @@
 import { Routes } from "@angular/router";
-import { ExpenseHistoryComponent } from "./expense/components/expense-history/expense-history.component";
+import { LoginComponent } from "./auth/login/login.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { EmptyComponent } from "./shared/empty.component";
 
 export const routes: Routes = [
-  { path: "", redirectTo: "gastos", pathMatch: "full" },
-  { path: "gastos", component: ExpenseHistoryComponent },
+  { path: "", redirectTo: "login", pathMatch: "full" },
+  { path: "login", component: LoginComponent },
+  { path: "dashboard", component: DashboardComponent },
+  { path: "gastos", component: EmptyComponent },
+  { path: "ingresos", component: EmptyComponent },
+  { path: "reportes", component: EmptyComponent },
+  { path: "categorias", component: EmptyComponent },
+  { path: "config", component: EmptyComponent },
+  { path: "**", redirectTo: "login" }
 ];

@@ -12,13 +12,24 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/control-gastos-frontend",
+            "outputPath": {
+              "base": "dist/control-gastos-frontend"
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css",
+              {
+                "input": "node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+                "bundleName": "material-theme"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
@@ -36,12 +47,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": { "buildTarget": "control-gastos-frontend:build:production" },
-            "development": { "buildTarget": "control-gastos-frontend:build:development" }
+            "production": {
+              "buildTarget": "control-gastos-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "control-gastos-frontend:build:development"
+            }
           },
           "defaultConfiguration": "development"
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "ffb526fb-ea88-447c-9350-eed2b6790b87"
   }
 }

@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -8,11 +9,20 @@ export const pool = new Pool({
   port: Number(process.env.DB_PORT) || 5432,
   database: process.env.DB_NAME || "control_gastos",
   user: process.env.DB_USER || "postgres",
-  password: process.env.DB_PASSWORD || "postgres",
+  password: process.env.DB_PASSWORD || "admin",
 });
 
-// Crea la tabla de gastos si no existe. Se ejecuta al iniciar el servidor.
 export async function initDatabase(): Promise<void> {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id SERIAL PRIMARY KEY,
+      nombre VARCHAR(150) NOT NULL,
+      email VARCHAR(200) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `);
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS expenses (
       id SERIAL PRIMARY KEY,
@@ -22,4 +32,16 @@ export async function initDatabase(): Promise<void> {
       created_at TIMESTAMP NOT NULL DEFAULT NOW()
     );
   `);
+
+  const defaultEmail = "Benjamin@gmail.com";
+  const existing = await pool.query("SELECT id FROM usuarios WHERE email = $1", [defaultEmail]);
+
+  if (existing.rows.length === 0) {
+    const hashedPassword = await bcrypt.hash("Benjamin34gt", 10);
+    await pool.query(
+      "INSERT INTO usuarios (nombre, email, password) VALUES ($1, $2, $3)",
+      ["Benjamin", defaultEmail, hashedPassword]
+    );
+    console.log("Usuario por defecto creado: Benjamin@gmail.com");
+  }
 }
