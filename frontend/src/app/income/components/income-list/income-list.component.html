@@ -45,10 +45,10 @@
             <td class="cell-amount">+{{ formatCurrency(income.amount) }}</td>
             <td class="cell-actions">
               <button class="btn-action btn-edit" (click)="editIncome(income)" title="Editar">
-                ✏️
+                ✎
               </button>
               <button class="btn-action btn-delete" (click)="deleteIncome(income)" title="Eliminar">
-                🗑️
+                ✕
               </button>
             </td>
           </tr>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="empty-state" *ngIf="!loading && incomes.length === 0">
-      <div class="empty-icon">📭</div>
+      <div class="empty-icon">📦</div>
       <p class="empty-text">No hay ingresos registrados todavía</p>
       <p class="empty-subtext">Registra tu primer ingreso usando el formulario de arriba</p>
     </div>
