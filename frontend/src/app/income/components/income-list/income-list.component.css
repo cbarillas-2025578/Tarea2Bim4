@@ -169,6 +169,7 @@
   border-radius: 6px;
   transition: all 0.2s ease;
   filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  opacity: 0.65;
 }
 
 .btn-edit:hover {
@@ -191,6 +192,7 @@
   font-size: 48px;
   margin-bottom: 16px;
   filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000) brightness(0) invert(1);
+  opacity: 0.6;
 }
 
 .empty-text {

@@ -122,6 +122,7 @@
   display: block;
   font-size: 80px;
   filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000) brightness(0) invert(1);
+  opacity: 0.75;
 }
 
 .divider {
@@ -157,6 +158,7 @@
 .label-icon {
   font-size: 14px;
   filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  opacity: 0.65;
 }
 
 .login-card .form-group input {
@@ -223,6 +225,7 @@
   color: #7A8B9E;
   transition: all 0.2s ease;
   filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  opacity: 0.65;
 }
 
 .toggle-pass:hover {
@@ -364,6 +367,7 @@
 .error-icon {
   font-size: 16px;
   filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  opacity: 0.65;
 }
 
 .card-footer {

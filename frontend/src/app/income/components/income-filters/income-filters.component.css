@@ -24,6 +24,7 @@
 .filters-icon {
   font-size: 14px;
   filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  opacity: 0.65;
 }
 
 .filters-body {
