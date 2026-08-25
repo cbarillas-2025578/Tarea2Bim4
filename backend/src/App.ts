@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import expenseRoutes from "./modules/expense/routes/expense.routes";
+import incomeRoutes from "./modules/income/routes/income.routes";
 import authRoutes from "./modules/auth/auth.routes";
 
 export class App {
@@ -27,6 +28,9 @@ export class App {
 
     // Rutas del módulo de gastos (expense)
     this.app.use("/api/expenses", expenseRoutes);
+
+    // Rutas del módulo de ingresos (income)
+    this.app.use("/api/incomes", incomeRoutes);
   }
 }
 

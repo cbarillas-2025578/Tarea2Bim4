@@ -39,7 +39,7 @@
       </div>
       <div class="line-chart-container">
         <div class="chart-y-axis">
-          <span>8K</span><span>6K</span><span>4K</span><span>2K</span><span>0</span>
+          <span *ngFor="let label of chartYLabels">{{ label }}</span>
         </div>
         <div class="chart-area">
           <svg viewBox="0 0 600 200" class="line-chart-svg" preserveAspectRatio="none">
@@ -53,29 +53,19 @@
                 <stop offset="100%" style="stop-color:#FF3B5C;stop-opacity:0" />
               </linearGradient>
             </defs>
-            <polygon fill="url(#gradientIncome)" points="0,200 0,120 85,80 170,100 255,50 340,70 425,30 510,60 600,40 600,200" />
-            <polyline fill="none" stroke="#00A3FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="0,120 85,80 170,100 255,50 340,70 425,30 510,60 600,40" />
-            <polygon fill="url(#gradientExpense)" points="0,200 0,150 85,130 170,140 255,110 340,120 425,100 510,90 600,80 600,200" />
-            <polyline fill="none" stroke="#FF3B5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="0,150 85,130 170,140 255,110 340,120 425,100 510,90 600,80" />
-            <circle cx="0" cy="120" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0s" />
-            <circle cx="85" cy="80" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.1s" />
-            <circle cx="170" cy="100" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.2s" />
-            <circle cx="255" cy="50" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.3s" />
-            <circle cx="340" cy="70" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.4s" />
-            <circle cx="425" cy="30" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.5s" />
-            <circle cx="510" cy="60" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.6s" />
-            <circle cx="600" cy="40" r="4" fill="#00A3FF" class="dot-animate" style="animation-delay:0.7s" />
-            <circle cx="0" cy="150" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0s" />
-            <circle cx="85" cy="130" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.1s" />
-            <circle cx="170" cy="140" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.2s" />
-            <circle cx="255" cy="110" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.3s" />
-            <circle cx="340" cy="120" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.4s" />
-            <circle cx="425" cy="100" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.5s" />
-            <circle cx="510" cy="90" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.6s" />
-            <circle cx="600" cy="80" r="4" fill="#FF3B5C" class="dot-animate" style="animation-delay:0.7s" />
+            <polygon fill="url(#gradientIncome)" [attr.points]="chartIncomeArea" />
+            <polyline fill="none" stroke="#00A3FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" [attr.points]="chartIncomePoints" />
+            <polygon fill="url(#gradientExpense)" [attr.points]="chartExpenseArea" />
+            <polyline fill="none" stroke="#FF3B5C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" [attr.points]="chartExpensePoints" />
+            <circle *ngFor="let dot of chartIncomeDots; let i = index"
+              [attr.cx]="dot.cx" [attr.cy]="dot.cy" r="4" fill="#00A3FF" class="dot-animate"
+              [style.animation-delay]="(i * 0.1) + 's'" />
+            <circle *ngFor="let dot of chartExpenseDots; let i = index"
+              [attr.cx]="dot.cx" [attr.cy]="dot.cy" r="4" fill="#FF3B5C" class="dot-animate"
+              [style.animation-delay]="(i * 0.1) + 's'" />
           </svg>
           <div class="chart-x-axis">
-            <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span><span>Jul</span><span>Ago</span>
+            <span *ngFor="let label of chartXLabels">{{ label }}</span>
           </div>
         </div>
       </div>
@@ -88,26 +78,25 @@
       <div class="donut-container">
         <svg viewBox="0 0 200 200" class="donut-chart">
           <circle cx="100" cy="100" r="80" fill="none" stroke="#1E2A3A" stroke-width="24" />
-          <circle cx="100" cy="100" r="80" fill="none" stroke="#00A3FF" stroke-width="24"
-            stroke-dasharray="175 503" stroke-dashoffset="0"
-            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.2s" />
-          <circle cx="100" cy="100" r="80" fill="none" stroke="#FF3B5C" stroke-width="24"
-            stroke-dasharray="150 503" stroke-dashoffset="-175"
-            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.4s" />
-          <circle cx="100" cy="100" r="80" fill="none" stroke="#FFC700" stroke-width="24"
-            stroke-dasharray="100 503" stroke-dashoffset="-325"
-            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.6s" />
-          <circle cx="100" cy="100" r="80" fill="none" stroke="#FF6B00" stroke-width="24"
-            stroke-dasharray="78 503" stroke-dashoffset="-425"
-            transform="rotate(-90 100 100)" class="donut-segment" style="animation-delay:0.8s" />
-          <text x="100" y="95" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="700">Q 3,450</text>
+          <circle *ngFor="let seg of donutSegments" cx="100" cy="100" r="80" fill="none"
+            [attr.stroke]="seg.color" stroke-width="24"
+            [attr.stroke-dasharray]="seg.dash" [attr.stroke-dashoffset]="seg.offset"
+            transform="rotate(-90 100 100)" class="donut-segment" [style.animation-delay]="seg.delay" />
+          <text x="100" y="95" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="700">
+            {{ formatCurrency(donutTotal) }}
+          </text>
           <text x="100" y="115" text-anchor="middle" fill="#7A8B9E" font-size="11">Total Gastos</text>
         </svg>
-        <div class="donut-legend">
-          <div class="donut-legend-item"><span class="legend-color" style="background:#00A3FF"></span>Alimentación <strong>35%</strong></div>
-          <div class="donut-legend-item"><span class="legend-color" style="background:#FF3B5C"></span>Transporte <strong>30%</strong></div>
-          <div class="donut-legend-item"><span class="legend-color" style="background:#FFC700"></span>Entretenimiento <strong>20%</strong></div>
-          <div class="donut-legend-item"><span class="legend-color" style="background:#FF6B00"></span>Salud <strong>15%</strong></div>
+        <div class="donut-legend" *ngIf="categoryTotals.length > 0">
+          <div class="donut-legend-item" *ngFor="let cat of categoryTotals">
+            <span class="legend-color" [style.background]="cat.color"></span>
+            {{ cat.name }} <strong>{{ cat.percent }}%</strong>
+          </div>
+        </div>
+        <div class="donut-legend" *ngIf="categoryTotals.length === 0">
+          <div class="donut-legend-item" style="color:#4A5568; grid-column: 1/-1; justify-content: center;">
+            Sin gastos registrados
+          </div>
         </div>
       </div>
     </div>
@@ -119,8 +108,8 @@
       <div class="transactions-table">
         <div class="transactions-header">
           <span>Transacción</span>
-          <span>Gastos</span>
-          <span>Balance</span>
+          <span>Monto</span>
+          <span>Fecha</span>
         </div>
         <div class="transaction-row" *ngFor="let tx of recentTransactions; let i = index"
           [style.animation-delay]="(i * 0.08) + 's'">
@@ -137,6 +126,9 @@
             {{ formatCurrency(tx.amount) }}
           </span>
           <span class="tx-date">{{ tx.date }}</span>
+        </div>
+        <div class="empty-transactions" *ngIf="recentTransactions.length === 0">
+          <span style="color:#4A5568; font-size:13px;">Sin movimientos aún</span>
         </div>
       </div>
     </div>
