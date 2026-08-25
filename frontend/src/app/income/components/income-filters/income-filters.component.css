@@ -23,6 +23,7 @@
 
 .filters-icon {
   font-size: 14px;
+  filter: brightness(0) invert(1);
 }
 
 .filters-body {

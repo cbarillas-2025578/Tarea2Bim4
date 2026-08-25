@@ -121,6 +121,7 @@
 .logo-emoji {
   display: block;
   font-size: 80px;
+  filter: brightness(0) invert(1);
 }
 
 .divider {
@@ -155,6 +156,7 @@
 
 .label-icon {
   font-size: 14px;
+  filter: brightness(0) invert(1);
 }
 
 .login-card .form-group input {
@@ -220,6 +222,7 @@
   padding: 6px 8px;
   color: #7A8B9E;
   transition: all 0.2s ease;
+  filter: brightness(0) invert(1);
 }
 
 .toggle-pass:hover {
@@ -360,6 +363,7 @@
 
 .error-icon {
   font-size: 16px;
+  filter: brightness(0) invert(1);
 }
 
 .card-footer {

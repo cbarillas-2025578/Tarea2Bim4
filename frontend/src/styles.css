@@ -378,3 +378,8 @@ body {
 .position-fixed { position: fixed; }
 .z-10 { z-index: 10; } .z-20 { z-index: 20; } .z-50 { z-index: 50; }
 .opacity-50 { opacity: 0.5; } .opacity-75 { opacity: 0.75; } .opacity-100 { opacity: 1; }
+
+.emoji-white {
+  filter: brightness(0) invert(1);
+  display: inline-block;
+}

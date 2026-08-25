@@ -61,6 +61,7 @@
 
 .month-icon {
   font-size: 14px;
+  filter: brightness(0) invert(1);
 }
 
 .user-greeting {
@@ -129,6 +130,7 @@
 
 .kpi-icon {
   font-size: 18px;
+  filter: brightness(0) invert(1);
 }
 
 .kpi-title {
