@@ -7,18 +7,18 @@
 .app-layout {
   display: flex;
   height: 100vh;
-  background: #121824;
+  background: #0b1329;
 }
 
 .sidebar {
-  width: 240px;
-  min-width: 240px;
-  background: #0C1017;
+  width: 260px;
+  min-width: 260px;
+  background: #0b1329;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 24px 14px;
-  border-right: 1px solid #1E2A3A;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   animation: slideInLeft 0.4s ease-out;
 }
 
@@ -39,22 +39,11 @@
   padding: 0 8px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 .sidebar-logo-img {
-  width: 100px;
-  height: 100px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
   mix-blend-mode: screen;
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 .nav-menu {
@@ -87,9 +76,9 @@
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, #FF3B5C 0%, #FF6B00 100%);
+  background: linear-gradient(135deg, #d31027 0%, #ea384d 100%);
   color: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(255, 59, 92, 0.3);
+  box-shadow: 0 4px 15px rgba(234, 56, 77, 0.4);
 }
 
 .nav-item.active .nav-icon {
@@ -97,12 +86,18 @@
 }
 
 .nav-icon {
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 24px;
-  text-align: center;
+  height: 24px;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
-  opacity: 0.65;
+}
+
+.nav-icon :deep(svg) {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
 }
 
 .nav-label {
@@ -111,7 +106,7 @@
 
 .sidebar-bottom {
   padding-top: 16px;
-  border-top: 1px solid #1E2A3A;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .logout-btn:hover {
@@ -122,5 +117,5 @@
 .main-content {
   flex: 1;
   overflow: hidden;
-  background: #121824;
+  background: #0b1329;
 }

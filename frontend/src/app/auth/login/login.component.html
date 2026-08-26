@@ -2,30 +2,40 @@
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
+  <div class="particles">
+    <div class="particle" *ngFor="let p of [1,2,3,4,5,6,7,8]"></div>
+  </div>
 
   <div class="login-card">
     <div class="card-glow"></div>
+    <div class="card-border-glow"></div>
 
     <div class="login-header">
       <div class="login-icon">
+        <div class="logo-ring"></div>
         <img *ngIf="logoUrl" [src]="logoUrl" alt="Logo" class="logo-img">
-        <span *ngIf="!logoUrl" class="logo-emoji">💰</span>
+        <span *ngIf="!logoUrl" class="logo-text">CG</span>
       </div>
+      <h1 class="login-title">Control de Gastos</h1>
+      <p class="login-subtitle">Inicia sesión en tu cuenta</p>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider"><span class="divider-dot"></span></div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label>
-          <span class="label-icon">✉️</span> Email
+          <span class="label-icon">✉</span> Email
         </label>
-        <input 
-          type="email" 
-          formControlName="email" 
-          placeholder="tu@email.com"
-          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        >
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            formControlName="email" 
+            placeholder="tu@email.com"
+            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          >
+          <div class="input-glow"></div>
+        </div>
         <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
           Ingresa un email válido
         </small>
@@ -35,12 +45,13 @@
         <label>
           <span class="label-icon">🔒</span> Contraseña
         </label>
-        <div class="password-input">
+        <div class="input-wrapper">
           <input 
             [type]="showPassword ? 'text' : 'password'" 
             formControlName="password" 
             placeholder="••••••••"
           >
+          <div class="input-glow"></div>
           <button type="button" class="toggle-pass" (click)="showPassword = !showPassword">
             {{ showPassword ? '👁' : '🔒' }}
           </button>
@@ -68,10 +79,11 @@
           <span class="spinner"></span>
           <span>Verificando...</span>
         </span>
+        <div class="btn-shine"></div>
       </button>
 
       <div *ngIf="errorMessage" class="error-message">
-        <span class="error-icon">⚠️</span> {{ errorMessage }}
+        <span class="error-icon">⚠</span> {{ errorMessage }}
       </div>
     </form>
 
