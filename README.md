@@ -1,38 +1,47 @@
-# Control de Gastos
+# Control de Ingresos y Gastos
 
-Aplicación de control de gastos personales, basada en la planificación del proyecto:
-- Registro de transacciones (monto, categoría, fecha y hora)
-- Historial visual con edición y eliminación
-- Filtros por mes y categoría
+Aplicación full-stack para control de finanzas personales con autenticación de usuarios.
+
+## Características
+
+- **Autenticación**: Registro, login y protección de rutas (JWT + Guards)
+- **Dashboard**: Resumen de ingresos, gastos y balance
+- **Ingresos**: CRUD completo (crear, leer, actualizar, eliminar)
+- **Filtros**: Por mes, año y categoría
+- **Persistencia**: PostgreSQL con TypeORM
 
 ## Estructura
 
 ```
-control-gastos/
-├── backend/                    # API en Node.js + Express + TypeScript + PostgreSQL
+Tarea2Bim4/
+├── backend/                    # API Node.js + Express + TypeScript + TypeORM + PostgreSQL
 │   └── src/
 │       ├── modules/
-│       │   ├── database/
-│       │   │   └── database.ts        # Conexión a PostgreSQL
-│       │   └── expense/
+│       │   ├── auth/           # Autenticación (registro, login, JWT)
+│       │   ├── database/       # Configuración TypeORM
+│       │   └── income/         # Módulo de ingresos
 │       │       ├── controllers/
 │       │       ├── services/
 │       │       ├── models/
 │       │       └── routes/
-│       ├── App.ts              # Configuración de Express
+│       ├── App.ts              # Configuración Express
 │       └── server.ts           # Punto de entrada
-└── frontend/                   # Angular (standalone components)
+└── frontend/                   # Angular 17+ (standalone components)
     └── src/app/
-        ├── expense/
+        ├── auth/
+        │   └── login/          # Componente de login
+        ├── dashboard/          # Vista principal con resumen
+        ├── income/
         │   ├── components/
-        │   │   ├── expense-form/       # Registro de transacciones
-        │   │   ├── expense-history/    # Historial visual (editar/eliminar)
-        │   │   └── expense-filters/    # Filtros por mes/categoría
-        │   ├── services/expense.service.ts
-        │   └── models/expense.model.ts
-        ├── app.component.ts
+        │   │   └── income-form/    # Formulario ingresos/gastos
+        │   ├── income.component.ts
+        │   └── income.component.html
+        ├── guards/             # AuthGuard para rutas protegidas
+        ├── services/
+        │   ├── auth.service.ts
+        │   └── income.service.ts
         ├── app.routes.ts
-        └── app.config.ts
+        └── app.component.ts
 ```
 
 ## Backend
@@ -40,18 +49,22 @@ control-gastos/
 ```bash
 cd backend
 npm install
-cp .env.example .env   # ajusta tus credenciales de PostgreSQL
-npm run dev             # http://localhost:3000
+cp .env.example .env   # Configura DB PostgreSQL y JWT_SECRET
+npm run dev            # http://localhost:3000
 ```
 
-Endpoints disponibles (`/api/expenses`):
-- `GET /api/expenses?month=&year=&category=` — listar (con filtros opcionales)
-- `GET /api/expenses/:id` — obtener uno
-- `POST /api/expenses` — crear `{ amount, category, transactionDate }`
-- `PUT /api/expenses/:id` — actualizar
-- `DELETE /api/expenses/:id` — eliminar
+### Endpoints (`/api`)
 
-La tabla `expenses` se crea automáticamente en PostgreSQL al iniciar el servidor.
+**Auth:**
+- `POST /api/auth/register` — `{ email, password, name }`
+- `POST /api/auth/login` — `{ email, password }` → retorna JWT
+
+**Ingresos (requieren Bearer Token):**
+- `GET /api/income?month=&year=&category=` — listar con filtros
+- `GET /api/income/:id` — obtener uno
+- `POST /api/income` — crear `{ amount, category, description, date, type }`
+- `PUT /api/income/:id` — actualizar
+- `DELETE /api/income/:id` — eliminar
 
 ## Frontend
 
@@ -61,9 +74,31 @@ npm install
 npm start   # http://localhost:4200
 ```
 
-El frontend consume la API definida en `src/environments/environment.ts` (`http://localhost:3000/api` por defecto).
+- Configura la API en `src/environments/environment.ts` (`http://localhost:3000/api` por defecto)
+- Rutas protegidas con `AuthGuard`
+- Interceptor HTTP adjunta JWT automáticamente
+
+## Variables de Entorno (Backend)
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
+DB_NAME=finanzas_db
+JWT_SECRET=tu_secreto_jwt
+JWT_EXPIRES_IN=24h
+PORT=3000
+```
+
+## Base de Datos
+
+Tablas creadas automáticamente al iniciar (`synchronize: true` en desarrollo):
+- `users` — usuarios registrados
+- `income` — transacciones (income/expense)
 
 ## Notas
 
-- No incluido: aplicación móvil, múltiples monedas (solo quetzales), enlace bancario — según el alcance definido en la planificación.
-- Este scaffold cubre la estructura y funcionalidad base; puedes ampliarlo con autenticación, paginación, gráficas, etc.
+- Moneda: Quetzales (GTQ)
+- Tipos de transacción: `income` | `expense`
+- Categorías predefinidas: Salario, Freelance, Inversiones, Alimentación, Transporte, Entretenimiento, Servicios, Otros
