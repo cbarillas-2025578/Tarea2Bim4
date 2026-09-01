@@ -1,5 +1,5 @@
 // frontend/src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
@@ -24,16 +24,37 @@ export interface User {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private apiUrl = 'http://localhost:3000/api/auth';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+  private expirationTimer: any = null;
+  private readonly TOKEN_DURATION_MS = 2 * 60 * 1000; // 2 minutos
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
     this.loadStoredUser();
+  }
+
+  ngOnDestroy(): void {
+    this.clearExpirationTimer();
+  }
+
+  // Programar expiración automática del token
+  private scheduleExpiration(): void {
+    this.clearExpirationTimer();
+    this.expirationTimer = setTimeout(() => {
+      this.handleTokenExpired();
+    }, this.TOKEN_DURATION_MS);
+  }
+
+  private clearExpirationTimer(): void {
+    if (this.expirationTimer) {
+      clearTimeout(this.expirationTimer);
+      this.expirationTimer = null;
+    }
   }
 
   // Login
@@ -52,11 +73,16 @@ export class AuthService {
   }
 
   // Logout
-  logout(): void {
+  logout(sessionExpired: boolean = false): void {
+    this.clearExpirationTimer();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    if (sessionExpired) {
+      this.router.navigate(['/login'], { queryParams: { sessionExpired: 'true' } });
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   // Verificar si está autenticado
@@ -67,10 +93,23 @@ export class AuthService {
     try {
       const decoded: any = jwtDecode(token);
       const currentTime = Date.now() / 1000;
-      return decoded.exp > currentTime;
+      if (decoded.exp <= currentTime) {
+        this.handleTokenExpired();
+        return false;
+      }
+      return true;
     } catch (error) {
       return false;
     }
+  }
+
+  // Manejar expiración del token
+  private handleTokenExpired(): void {
+    this.clearExpirationTimer();
+    if (!this.getToken()) return;
+    const alreadyRedirected = this.router.url.includes('sessionExpired');
+    if (alreadyRedirected) return;
+    this.logout(true);
   }
 
   // Obtener token
@@ -88,6 +127,7 @@ export class AuthService {
     localStorage.setItem('token', response.token);
     localStorage.setItem('user', JSON.stringify(response.user));
     this.currentUserSubject.next(response.user);
+    this.scheduleExpiration();
   }
 
   // Cargar usuario almacenado
@@ -97,6 +137,7 @@ export class AuthService {
       try {
         const user = JSON.parse(userStr);
         this.currentUserSubject.next(user);
+        this.scheduleExpiration();
       } catch (error) {
         this.logout();
       }

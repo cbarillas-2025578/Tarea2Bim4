@@ -82,6 +82,10 @@
         <div class="btn-shine"></div>
       </button>
 
+      <div *ngIf="infoMessage" class="info-message">
+        <span class="info-icon">⏳</span> {{ infoMessage }}
+      </div>
+
       <div *ngIf="errorMessage" class="error-message">
         <span class="error-icon">⚠</span> {{ errorMessage }}
       </div>

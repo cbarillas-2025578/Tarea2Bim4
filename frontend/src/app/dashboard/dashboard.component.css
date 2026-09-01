@@ -7,6 +7,7 @@
   padding: 28px 32px;
   height: 100%;
   overflow-y: auto;
+  background: #0d1117;
 }
 
 .dashboard-header {
@@ -134,8 +135,17 @@
 }
 
 .kpi-icon {
-  font-size: 18px;
-  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) brightness(0) invert(1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.kpi-icon :deep(svg) {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
   opacity: 0.65;
 }
 

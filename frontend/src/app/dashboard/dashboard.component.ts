@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
+import { forkJoin, Subject, takeUntil, filter } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { IncomeService } from '../income/services/income.service';
 import { Income } from '../income/models/income.model';
@@ -50,15 +51,17 @@ interface ExpenseRecord {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   currentMonth = 'Agosto 2026';
   userName = 'Benjamin';
   userInitials = 'BE';
 
   kpis: KpiCard[] = [
-    { title: 'Ingresos', amount: 0, color: '#00A3FF', icon: '📈' },
-    { title: 'Gastos', amount: 0, color: '#FF3B5C', icon: '📉' },
-    { title: 'Balance', amount: 0, color: '#FFC700', icon: '💰' }
+    { title: 'Ingresos', amount: 0, color: '#00A3FF', icon: '' },
+    { title: 'Gastos', amount: 0, color: '#FF3B5C', icon: '' },
+    { title: 'Balance', amount: 0, color: '#FFC700', icon: '' }
   ];
 
   recentTransactions: Transaction[] = [];
@@ -69,6 +72,8 @@ export class DashboardComponent implements OnInit {
   chartIncomeArea = '';
   chartExpensePoints = '';
   chartExpenseArea = '';
+  chartIncomePath = '';
+  chartExpensePath = '';
   chartIncomeDots: { cx: number; cy: number }[] = [];
   chartExpenseDots: { cx: number; cy: number }[] = [];
   chartYLabels: string[] = [];
@@ -80,11 +85,18 @@ export class DashboardComponent implements OnInit {
   private allIncomes: Income[] = [];
   private allExpenses: ExpenseRecord[] = [];
 
+  private kpiIcons: { [key: string]: string } = {
+    Ingresos: '<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>',
+    Gastos: '<circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path>',
+    Balance: '<line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>'
+  };
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private incomeService: IncomeService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -95,6 +107,22 @@ export class DashboardComponent implements OnInit {
     }
 
     this.loadDashboardData();
+
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        if (event.url === '/dashboard') {
+          this.loadDashboardData();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadDashboardData(): void {
@@ -125,19 +153,17 @@ export class DashboardComponent implements OnInit {
     const totalExpenses = this.allExpenses.reduce((sum, e) => sum + e.amount, 0);
 
     this.kpis = [
-      { title: 'Ingresos', amount: totalIncome, color: '#00A3FF', icon: '📈' },
-      { title: 'Gastos', amount: totalExpenses, color: '#FF3B5C', icon: '📉' },
-      { title: 'Balance', amount: totalIncome - totalExpenses, color: '#FFC700', icon: '💰' }
+      { title: 'Ingresos', amount: totalIncome, color: '#00A3FF', icon: '' },
+      { title: 'Gastos', amount: totalExpenses, color: '#FF3B5C', icon: '' },
+      { title: 'Balance', amount: totalIncome - totalExpenses, color: '#FFC700', icon: '' }
     ];
   }
 
   private computeMonthlyData(year: number): void {
     const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-    const currentMonthIdx = new Date().getMonth();
 
     const months: MonthlyData[] = [];
-    for (let i = 7; i >= 0; i--) {
-      const mIdx = (currentMonthIdx - i + 12) % 12;
+    for (let mIdx = 0; mIdx < 12; mIdx++) {
       months.push({ label: monthNames[mIdx], income: 0, expense: 0 });
     }
 
@@ -145,8 +171,7 @@ export class DashboardComponent implements OnInit {
       const d = new Date(inc.transactionDate);
       if (d.getFullYear() === year) {
         const mIdx = d.getMonth();
-        const entry = months.find(m => m.label === monthNames[mIdx]);
-        if (entry) entry.income += inc.amount;
+        months[mIdx].income += inc.amount;
       }
     });
 
@@ -154,8 +179,7 @@ export class DashboardComponent implements OnInit {
       const d = new Date(exp.transactionDate);
       if (d.getFullYear() === year) {
         const mIdx = d.getMonth();
-        const entry = months.find(m => m.label === monthNames[mIdx]);
-        if (entry) entry.expense += exp.amount;
+        months[mIdx].expense += exp.amount;
       }
     });
 
@@ -196,8 +220,31 @@ export class DashboardComponent implements OnInit {
     this.chartIncomeArea = `${incPoints.join(' ')} ${svgWidth},${svgHeight} 0,${svgHeight}`;
     this.chartExpenseArea = `${expPoints.join(' ')} ${svgWidth},${svgHeight} 0,${svgHeight}`;
 
+    const incCoords = data.map((d, i) => ({ x: i * stepX, y: toY(d.income) }));
+    const expCoords = data.map((d, i) => ({ x: i * stepX, y: toY(d.expense) }));
+    this.chartIncomePath = this.computeBezierPath(incCoords);
+    this.chartExpensePath = this.computeBezierPath(expCoords);
+
     this.chartIncomeDots = data.map((d, i) => ({ cx: i * stepX, cy: toY(d.income) }));
     this.chartExpenseDots = data.map((d, i) => ({ cx: i * stepX, cy: toY(d.expense) }));
+  }
+
+  private computeBezierPath(points: { x: number; y: number }[]): string {
+    if (points.length < 2) return '';
+    let d = `M ${points[0].x},${points[0].y}`;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[Math.max(0, i - 1)];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[Math.min(points.length - 1, i + 2)];
+      const tension = 0.3;
+      const cp1x = p1.x + (p2.x - p0.x) * tension;
+      const cp1y = p1.y + (p2.y - p0.y) * tension;
+      const cp2x = p2.x - (p3.x - p1.x) * tension;
+      const cp2y = p2.y - (p3.y - p1.y) * tension;
+      d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+    }
+    return d;
   }
 
   private computeDonut(): void {
@@ -271,6 +318,12 @@ export class DashboardComponent implements OnInit {
   private formatShortDate(d: Date): string {
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     return `${d.getDate()} ${months[d.getMonth()]}`;
+  }
+
+  getKpiIcon(title: string): SafeHtml {
+    const path = this.kpiIcons[title] || '';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
   formatCurrency(amount: number): string {
