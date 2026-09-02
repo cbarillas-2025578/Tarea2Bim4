@@ -1,0 +1,34 @@
+<div class="card">
+  <h2>{{ expenseToEdit ? "Editar gasto" : "Registrar nuevo gasto" }}</h2>
+
+  <form (ngSubmit)="submit()" style="display: flex; flex-direction: column; gap: 12px; max-width: 420px;">
+    <label>
+      Monto (Q)
+      <input type="number" step="0.01" min="0" [(ngModel)]="amount" name="amount" required />
+    </label>
+
+    <label>
+      Categoría
+      <select [(ngModel)]="category" name="category" required>
+        <option value="" disabled>Selecciona una categoría</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+    </label>
+
+    <label>
+      Fecha y hora
+      <input type="datetime-local" [(ngModel)]="transactionDate" name="transactionDate" required />
+    </label>
+
+    <p *ngIf="errorMessage" style="color: #dc2626; margin: 0;">{{ errorMessage }}</p>
+
+    <div style="display: flex; gap: 8px;">
+      <button type="submit" class="btn-primary">
+        {{ expenseToEdit ? "Guardar cambios" : "Registrar gasto" }}
+      </button>
+      <button type="button" class="btn-secondary" *ngIf="expenseToEdit" (click)="cancel()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>
