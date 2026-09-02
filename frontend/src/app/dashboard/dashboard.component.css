@@ -69,10 +69,17 @@
 
 .user-greeting {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
   color: #7A8B9E;
   font-size: 14px;
+}
+
+.greeting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .user-greeting strong {

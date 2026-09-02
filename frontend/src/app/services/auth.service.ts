@@ -112,6 +112,20 @@ export class AuthService implements OnDestroy {
     this.logout(true);
   }
 
+  // Actualizar perfil del usuario
+  updateProfile(nombre: string, email: string): void {
+    const current = this.currentUserSubject.value;
+    if (!current) return;
+    const updated = { ...current, nombre, email };
+    const stored = localStorage.getItem('user');
+    let parsed: any = null;
+    if (stored) {
+      try { parsed = JSON.parse(stored); } catch { parsed = null; }
+    }
+    localStorage.setItem('user', JSON.stringify({ ...(parsed || {}), nombre, email }));
+    this.currentUserSubject.next(updated);
+  }
+
   // Obtener token
   getToken(): string | null {
     return localStorage.getItem('token');

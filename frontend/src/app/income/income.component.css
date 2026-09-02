@@ -398,6 +398,13 @@
   margin-bottom: 16px;
 }
 
+.empty-icon-q {
+  font-size: 34px;
+  font-weight: 700;
+  color: #4A5568;
+  line-height: 1;
+}
+
 .empty-text {
   font-size: 16px;
   font-weight: 600;
