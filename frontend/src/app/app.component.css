@@ -1,0 +1,131 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  background: #0b1329;
+}
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: #0b1329;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideInLeft 0.4s ease-out;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 36px;
+  padding: 0 8px;
+}
+
+.sidebar-logo-img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
+.brand-name {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #7A8B9E;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #FFFFFF;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, #d31027 0%, #ea384d 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 15px rgba(234, 56, 77, 0.4);
+}
+
+.nav-item.active .nav-icon {
+  color: #FFFFFF;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.nav-icon :deep(svg) {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+.nav-label {
+  white-space: nowrap;
+}
+
+.sidebar-bottom {
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 59, 92, 0.1);
+  color: #FF3B5C;
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
+  background: #0b1329;
+}
